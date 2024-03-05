@@ -14,12 +14,17 @@ const initialState = {
 const authSlice = createSlice({
   name: 'authSlice',
   reducers: {
+    // saves all data in the state
     saveData: (state, action) => {
-      // state = {
-      //   ...state,
-      //   ...action.payload,
-      // };
-      state.loading = true;
+      return {
+        ...state,
+        ...action.payload,
+      };
+    },
+
+    // resets the state to initial state
+    logout: (state, action) => {
+      return initialState;
     },
   },
   initialState,
@@ -81,5 +86,5 @@ const authSlice = createSlice({
   },
 });
 
-export const {saveData} = authSlice.actions;
+export const {saveData, logout} = authSlice.actions;
 export default authSlice;

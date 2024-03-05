@@ -1,9 +1,12 @@
 import React, {useState} from 'react';
-import {Text, View, Pressable} from 'react-native';
+import {Text, View, Pressable, Alert} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
+import {useDispatch} from 'react-redux';
 import PrimaryButton from '../../components/primaryButton';
 import AuthProviderBtn from '../../components/authProviderBtn';
 import PrimaryInput from '../../components/primaryInput';
+
+import {saveData} from '../../slice/auth';
 
 const googleIcon = require('../../assets/google-icon.png');
 const appleIcon = require('../../assets/apple-icon.png');
@@ -11,15 +14,41 @@ const facebookIcon = require('../../assets/facebook-icon.png');
 const emailIcon = require('../../assets/email-icon.png');
 const passwordIcon = require('../../assets/password-icon.png');
 
+// thunk
+import {login} from '../../thunk/auth';
+
 const Login = () => {
+  const dispatch = useDispatch();
   const navigation = useNavigation();
   const [formData, setFormData] = useState({
-    email: '',
-    password: '',
+    email: 'johndoe@mail.com',
+    password: '12345678',
   });
 
   const onChangeHandler = (name, value) => {
     setFormData({...formData, [name]: value});
+  };
+
+  const onSubmit = async ({authProvider, social_id}) => {
+    try {
+      const reqModal = {
+        email: formData.email,
+        password: formData.password,
+        role: 'farmer',
+        device_token: '0imfnc8mVLWwsAawjYr4Rx-Af50DDqtlx',
+        type: authProvider,
+        social_id: social_id,
+      };
+      const response = await dispatch(login(reqModal)).unwrap();
+      if (response.success) {
+        dispatch(saveData(response));
+        navigation.navigate('home');
+      } else {
+        Alert.alert('Login Failed', response.message);
+      }
+    } catch (error) {
+      Alert.alert('Internal Error', error.message);
+    }
   };
 
   return (
@@ -90,7 +119,7 @@ const Login = () => {
       />
       <PrimaryButton
         label={'Login'}
-        action={() => navigation.navigate('home')}
+        action={() => onSubmit({authProvider: 'email', social_id: ''})}
       />
       <View>
         <Text
@@ -108,9 +137,33 @@ const Login = () => {
           flexDirection: 'row',
           justifyContent: 'space-between',
         }}>
-        <AuthProviderBtn icon={googleIcon} action={() => {}} />
-        <AuthProviderBtn icon={appleIcon} action={() => {}} />
-        <AuthProviderBtn icon={facebookIcon} action={() => {}} />
+        <AuthProviderBtn
+          icon={googleIcon}
+          action={() =>
+            onSubmit({
+              authProvider: 'google',
+              social_id: '0imfnc8mVLWwsAawjYr4Rx-Af50DDqtlx',
+            })
+          }
+        />
+        <AuthProviderBtn
+          icon={appleIcon}
+          action={() =>
+            onSubmit({
+              authProvider: 'apple',
+              social_id: '0imfnc8mVLWwsAawjYr4Rx-Af50DDqtlx',
+            })
+          }
+        />
+        <AuthProviderBtn
+          icon={facebookIcon}
+          action={() =>
+            onSubmit({
+              authProvider: 'facebook',
+              social_id: '0imfnc8mVLWwsAawjYr4Rx-Af50DDqtlx',
+            })
+          }
+        />
       </View>
     </View>
   );

@@ -20,7 +20,7 @@ import Home from './MainApp/home';
 
 const RootContainer = () => {
   const Stack = createNativeStackNavigator();
-  const reducerState = useSelector(state => state.auth);
+  const reduxState = useSelector(state => state.auth);
 
   return (
     <View style={{flex: 1}}>
@@ -55,7 +55,7 @@ const RootContainer = () => {
           />
         </Stack.Navigator>
       </NavigationContainer>
-      {reducerState.loading && <LoadingOverlay />}
+      {reduxState.loading && <LoadingOverlay />}
     </View>
   );
 };

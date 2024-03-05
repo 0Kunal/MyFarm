@@ -25,7 +25,7 @@ export const getAxios = () => {
     async error => {
       if (error.response && error.response.status === 401) {
         //dispatch action using store to show token expire popup-----
-        await AsyncStorage.getItem('token');
+        // await AsyncStorage.getItem('token');
         // window.location.pathname = "#/login";
         return new Promise((resolve, reject) => {
           reject(error);

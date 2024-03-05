@@ -1,19 +1,42 @@
 import React, {useState} from 'react';
-import {Text, View, Pressable} from 'react-native';
+import {Text, View, Pressable, Alert} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
+import {useDispatch} from 'react-redux';
 import PrimaryButton from '../../components/primaryButton';
 import PrimaryInput from '../../components/primaryInput';
 
 const phoneIcon = require('../../assets/phone-icon.png');
 
+// action
+import {sendOtp} from '../../thunk/auth';
+import {saveData} from '../../slice/auth';
+
 const ForgotPassword = () => {
+  const dispatch = useDispatch();
   const navigation = useNavigation();
   const [formData, setFormData] = useState({
-    phoneNumber: '',
+    phoneNumber: '+1984512598',
   });
 
   const onChangeHandler = (name, value) => {
     setFormData({...formData, [name]: value});
+  };
+
+  const onSendCode = async () => {
+    try {
+      const reqModal = {
+        mobile: formData.phoneNumber,
+      };
+      const response = await dispatch(sendOtp(reqModal)).unwrap();
+      if (response.success) {
+        dispatch(saveData(reqModal));
+        navigation.navigate('otp');
+      } else {
+        Alert.alert('Send OTP Error', response.message);
+      }
+    } catch (error) {
+      Alert.alert('Internal Error', error.message);
+    }
   };
 
   return (
@@ -67,10 +90,7 @@ const ForgotPassword = () => {
         autoComplete={'tel'}
         startIcon={phoneIcon}
       />
-      <PrimaryButton
-        label={'Send Code'}
-        action={() => navigation.navigate('otp')}
-      />
+      <PrimaryButton label={'Send Code'} action={onSendCode} />
     </View>
   );
 };

@@ -1,17 +1,54 @@
 import React, {useState} from 'react';
-import {Text, View, Pressable} from 'react-native';
+import {Text, View, Pressable, Alert} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
+import {useDispatch, useSelector} from 'react-redux';
 import PrimaryButton from '../../components/primaryButton';
 import OTPTextView from 'react-native-otp-textinput';
 
+// thunk
+import {verifyOtp, sendOtp} from '../../thunk/auth';
+
 const OTP = () => {
+  const dispatch = useDispatch();
   const navigation = useNavigation();
+  const reduxState = useSelector(state => state.auth);
   const [formData, setFormData] = useState({
-    otp: '',
+    otp: '895642',
   });
 
   const onChangeHandler = (name, value) => {
     setFormData({...formData, [name]: value});
+  };
+
+  const onVerifyCode = async () => {
+    try {
+      const reqModal = {
+        otp: formData.otp,
+      };
+      const response = await dispatch(verifyOtp(reqModal)).unwrap();
+      if (response.success) {
+        navigation.navigate('resetPassword');
+      } else {
+        Alert.alert('OTP Verifiction Failed', response.message);
+      }
+    } catch (error) {
+      Alert.alert('Internal Error', error.message || error.toString());
+    }
+  };
+
+  const onResendCode = async () => {
+    try {
+      const reqModal = {
+        mobile: reduxState.mobile,
+      };
+      const response = await dispatch(sendOtp(reqModal)).unwrap();
+      if (response.success) {
+      } else {
+        Alert.alert('Send OTP Error', response.message);
+      }
+    } catch (error) {
+      Alert.alert('Internal Error', error.message);
+    }
   };
 
   return (
@@ -63,6 +100,7 @@ const OTP = () => {
         tintColor={'#D5715B'}
         offTintColor={'#eeedec'}
         autoFocus={true}
+        defaultValue={formData.otp}
         handleTextChange={value => onChangeHandler('otp', value)}
         textInputStyle={{
           backgroundColor: '#eeedec',
@@ -75,11 +113,8 @@ const OTP = () => {
           borderWidth: 1,
         }}
       />
-      <PrimaryButton
-        label={'Submit'}
-        action={() => navigation.navigate('resetPassword')}
-      />
-      <Pressable onPress={() => {}}>
+      <PrimaryButton label={'Submit'} action={onVerifyCode} />
+      <Pressable onPress={onResendCode}>
         <Text
           style={{
             fontSize: 14,

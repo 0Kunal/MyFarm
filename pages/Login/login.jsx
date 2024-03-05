@@ -6,16 +6,15 @@ import PrimaryButton from '../../components/primaryButton';
 import AuthProviderBtn from '../../components/authProviderBtn';
 import PrimaryInput from '../../components/primaryInput';
 
-import {saveData} from '../../slice/auth';
-
 const googleIcon = require('../../assets/google-icon.png');
 const appleIcon = require('../../assets/apple-icon.png');
 const facebookIcon = require('../../assets/facebook-icon.png');
 const emailIcon = require('../../assets/email-icon.png');
 const passwordIcon = require('../../assets/password-icon.png');
 
-// thunk
+// action
 import {login} from '../../thunk/auth';
+import {saveData} from '../../slice/auth';
 
 const Login = () => {
   const dispatch = useDispatch();
@@ -29,7 +28,7 @@ const Login = () => {
     setFormData({...formData, [name]: value});
   };
 
-  const onSubmit = async ({authProvider, social_id}) => {
+  const onLogin = async ({authProvider, social_id}) => {
     try {
       const reqModal = {
         email: formData.email,
@@ -119,7 +118,7 @@ const Login = () => {
       />
       <PrimaryButton
         label={'Login'}
-        action={() => onSubmit({authProvider: 'email', social_id: ''})}
+        action={() => onLogin({authProvider: 'email', social_id: ''})}
       />
       <View>
         <Text

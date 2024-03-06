@@ -121,7 +121,7 @@ const Onboarding = () => {
         <PrimaryButton
           label={'Join the movement'}
           color={layout.backgroundColor}
-          action={() => {}}
+          action={() => navigation.navigate('signup')}
           width={'60%'}
           height={60}
         />

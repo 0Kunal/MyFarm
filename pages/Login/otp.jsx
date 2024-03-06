@@ -7,6 +7,7 @@ import OTPTextView from 'react-native-otp-textinput';
 
 // thunk
 import {verifyOtp, sendOtp} from '../../thunk/auth';
+import {saveData} from '../../slice/auth';
 
 const OTP = () => {
   const dispatch = useDispatch();
@@ -27,6 +28,7 @@ const OTP = () => {
       };
       const response = await dispatch(verifyOtp(reqModal)).unwrap();
       if (response.success) {
+        dispatch(saveData(reqModal));
         navigation.navigate('resetPassword');
       } else {
         Alert.alert('OTP Verifiction Failed', response.message);

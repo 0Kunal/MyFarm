@@ -1,20 +1,52 @@
 import React, {useState} from 'react';
-import {Text, View, Pressable} from 'react-native';
+import {Text, View, Pressable, Alert} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
+import {useDispatch, useSelector} from 'react-redux';
 import PrimaryButton from '../../components/primaryButton';
 import PrimaryInput from '../../components/primaryInput';
 
 const passwordIcon = require('../../assets/password-icon.png');
 
+// action
+import {resetPassword} from '../../thunk/auth';
+
 const ResetPassword = () => {
+  const dispatch = useDispatch();
   const navigation = useNavigation();
+  const reduxState = useSelector(state => state.auth);
+  const [hideState, setHideState] = useState({
+    newPassword: true,
+    confirmPassword: true,
+  });
   const [formData, setFormData] = useState({
-    newPassword: '',
-    confirmPassword: '',
+    newPassword: 'examplepassword',
+    confirmPassword: 'examplepassword',
   });
 
   const onChangeHandler = (name, value) => {
     setFormData({...formData, [name]: value});
+  };
+
+  const onResetPassword = async () => {
+    try {
+      const reqModal = {
+        token: reduxState.otp,
+        password: formData.newPassword,
+        cpassword: formData.confirmPassword,
+      };
+      const response = await dispatch(resetPassword(reqModal)).unwrap();
+      if (response.success) {
+        navigation.navigate('login');
+      } else {
+        Alert.alert('Reset Password Failed', response.message);
+      }
+    } catch (error) {
+      Alert.alert('Internal Error', error.message);
+    }
+  };
+
+  const controlHideState = field => {
+    setHideState({...hideState, [field]: !hideState[field]});
   };
 
   return (
@@ -67,7 +99,14 @@ const ResetPassword = () => {
         placeholder={'New Password'}
         autoComplete={'password'}
         startIcon={passwordIcon}
-        isSecure={true}
+        isSecure={hideState.newPassword}
+        endAction={
+          <Pressable onPress={() => controlHideState('newPassword')}>
+            <Text style={{fontSize: 14, fontWeight: 400, color: '#D5715B'}}>
+              {hideState.newPassword ? 'Show' : 'Hide'}
+            </Text>
+          </Pressable>
+        }
       />
       <PrimaryInput
         value={formData.confirmPassword}
@@ -75,12 +114,16 @@ const ResetPassword = () => {
         placeholder={'Confirm New Password'}
         autoComplete={'password'}
         startIcon={passwordIcon}
-        isSecure={true}
+        isSecure={hideState.confirmPassword}
+        endAction={
+          <Pressable onPress={() => controlHideState('confirmPassword')}>
+            <Text style={{fontSize: 14, fontWeight: 400, color: '#D5715B'}}>
+              {hideState.confirmPassword ? 'Show' : 'Hide'}
+            </Text>
+          </Pressable>
+        }
       />
-      <PrimaryButton
-        label={'Submit'}
-        action={() => navigation.navigate('login')}
-      />
+      <PrimaryButton label={'Submit'} action={onResetPassword} />
     </View>
   );
 };

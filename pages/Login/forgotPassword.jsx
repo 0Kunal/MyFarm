@@ -85,7 +85,7 @@ const ForgotPassword = () => {
       </View>
       <PrimaryInput
         value={formData.phoneNumber}
-        onChange={e => onChangeHandler('phoneNumber', e.target.value)}
+        onChange={value => onChangeHandler('phoneNumber', value)}
         placeholder={'Phone Number'}
         autoComplete={'tel'}
         startIcon={phoneIcon}

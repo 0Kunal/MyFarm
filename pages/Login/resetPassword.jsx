@@ -27,6 +27,10 @@ const ResetPassword = () => {
     setFormData({...formData, [name]: value});
   };
 
+  const controlHideState = field => {
+    setHideState({...hideState, [field]: !hideState[field]});
+  };
+
   const onResetPassword = async () => {
     try {
       const reqModal = {
@@ -43,10 +47,6 @@ const ResetPassword = () => {
     } catch (error) {
       Alert.alert('Internal Error', error.message);
     }
-  };
-
-  const controlHideState = field => {
-    setHideState({...hideState, [field]: !hideState[field]});
   };
 
   return (
@@ -95,7 +95,7 @@ const ResetPassword = () => {
       </View>
       <PrimaryInput
         value={formData.newPassword}
-        onChange={e => onChangeHandler('newPassword', e.target.value)}
+        onChange={value => onChangeHandler('newPassword', value)}
         placeholder={'New Password'}
         autoComplete={'password'}
         startIcon={passwordIcon}
@@ -110,7 +110,7 @@ const ResetPassword = () => {
       />
       <PrimaryInput
         value={formData.confirmPassword}
-        onChange={e => onChangeHandler('confirmPassword', e.target.value)}
+        onChange={value => onChangeHandler('confirmPassword', value)}
         placeholder={'Confirm New Password'}
         autoComplete={'password'}
         startIcon={passwordIcon}

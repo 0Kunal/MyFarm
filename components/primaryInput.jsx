@@ -24,7 +24,7 @@ const PrimaryInput = ({
       {startIcon && <Image source={startIcon} />}
       <TextInput
         value={value}
-        onChange={onChange}
+        onChangeText={onChange}
         placeholder={placeholder}
         autoComplete={autoComplete}
         secureTextEntry={isSecure}

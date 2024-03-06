@@ -20,7 +20,7 @@ const Login = () => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
   const [formData, setFormData] = useState({
-    email: 'johndoe@mail.com',
+    email: 'kunalkamat3@gmail.com',
     password: '12345678',
   });
 
@@ -28,11 +28,11 @@ const Login = () => {
     setFormData({...formData, [name]: value});
   };
 
-  const onLogin = async ({authProvider, social_id}) => {
+  const onLogin = async ({authProvider, social_id, email, password}) => {
     try {
       const reqModal = {
-        email: formData.email,
-        password: formData.password,
+        email: email || formData.email,
+        password: password || formData.password,
         role: 'farmer',
         device_token: '0imfnc8mVLWwsAawjYr4Rx-Af50DDqtlx',
         type: authProvider,
@@ -96,14 +96,14 @@ const Login = () => {
       </View>
       <PrimaryInput
         value={formData.email}
-        onChange={e => onChangeHandler('email', e.target.value)}
+        onChange={value => onChangeHandler('email', value)}
         placeholder={'Email Address'}
         autoComplete={'email'}
         startIcon={emailIcon}
       />
       <PrimaryInput
         value={formData.password}
-        onChange={e => onChangeHandler('password', e.target.value)}
+        onChange={value => onChangeHandler('password', value)}
         placeholder={'Password'}
         autoComplete={'password'}
         startIcon={passwordIcon}
@@ -139,7 +139,9 @@ const Login = () => {
         <AuthProviderBtn
           icon={googleIcon}
           action={() =>
-            onSubmit({
+            onLogin({
+              email: 'kunalkamat3@gmail.com',
+              password: '12345678',
               authProvider: 'google',
               social_id: '0imfnc8mVLWwsAawjYr4Rx-Af50DDqtlx',
             })
@@ -148,7 +150,9 @@ const Login = () => {
         <AuthProviderBtn
           icon={appleIcon}
           action={() =>
-            onSubmit({
+            onLogin({
+              email: 'kunalkamat3@gmail.com',
+              password: '12345678',
               authProvider: 'apple',
               social_id: '0imfnc8mVLWwsAawjYr4Rx-Af50DDqtlx',
             })
@@ -157,7 +161,9 @@ const Login = () => {
         <AuthProviderBtn
           icon={facebookIcon}
           action={() =>
-            onSubmit({
+            onLogin({
+              email: 'kunalkamat3@gmail.com',
+              password: '12345678',
               authProvider: 'facebook',
               social_id: '0imfnc8mVLWwsAawjYr4Rx-Af50DDqtlx',
             })

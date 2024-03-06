@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
-import {Text, View, Pressable, Image} from 'react-native';
+import {Text, View, Pressable, Image, Alert} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
+import {useDispatch} from 'react-redux';
 import PrimaryButton from '../../components/primaryButton';
 import PrimaryInput from '../../components/primaryInput';
 import PrimaryDropdown from '../../components/primaryDropdown';
@@ -11,7 +12,11 @@ const homeIcon = require('../../assets/home-icon.png');
 const locationIcon = require('../../assets/location-icon.png');
 const leftArrowIcon = require('../../assets/leftArrow-icon.png');
 
+// action
+import {saveData} from '../../slice/auth';
+
 const stateOptions = [
+  {label: 'New York', value: 'New York'},
   {label: 'Andhra Pradesh', value: 'Andhra Pradesh'},
   {label: 'Arunachal Pradesh', value: 'Arunachal Pradesh'},
   {label: 'Assam', value: 'Assam'},
@@ -42,19 +47,36 @@ const stateOptions = [
   {label: 'West Bengal', value: 'West Bengal'},
 ];
 const FarmInfo = () => {
+  const dispatch = useDispatch();
   const navigation = useNavigation();
   const [formData, setFormData] = useState({
-    businessName: '',
-    informalName: '',
-    streetAddress: '',
-    city: '',
-    state: '',
-    state: '',
-    zipcode: '',
+    businessName: 'Dairy Farm',
+    informalName: 'London Dairy',
+    streetAddress: '3663 Marshville Road',
+    city: 'Poughkeepsie',
+    state: 'New York',
+    zipcode: '12601',
   });
 
   const onChangeHandler = (name, value) => {
     setFormData({...formData, [name]: value});
+  };
+
+  const onSubmit = () => {
+    try {
+      const dataModal = {
+        business_name: formData.businessName,
+        informal_name: formData.informalName,
+        address: formData.streetAddress,
+        city: formData.city,
+        state: formData.state,
+        zip_code: formData.zipcode,
+      };
+      dispatch(saveData(dataModal));
+      navigation.navigate('verification');
+    } catch (error) {
+      Alert.alert('Internal Error', error.message);
+    }
   };
 
   return (
@@ -91,28 +113,28 @@ const FarmInfo = () => {
       <View style={{flex: 1, marginTop: 40, rowGap: 24}}>
         <PrimaryInput
           value={formData.businessName}
-          onChange={e => onChangeHandler('businessName', e.target.value)}
+          onChange={value => onChangeHandler('businessName', value)}
           placeholder={'Business Name'}
           autoComplete={'organization'}
           startIcon={tagIcon}
         />
         <PrimaryInput
           value={formData.informalName}
-          onChange={e => onChangeHandler('informalName', e.target.value)}
+          onChange={value => onChangeHandler('informalName', value)}
           placeholder={'Informal Name'}
           autoComplete={'additional-name'}
           startIcon={smilyIcon}
         />
         <PrimaryInput
           value={formData.streetAddress}
-          onChange={e => onChangeHandler('streetAddress', e.target.value)}
+          onChange={value => onChangeHandler('streetAddress', value)}
           placeholder={'Street Address'}
           autoComplete={'street-address'}
           startIcon={homeIcon}
         />
         <PrimaryInput
           value={formData.city}
-          onChange={e => onChangeHandler('city', e.target.value)}
+          onChange={value => onChangeHandler('city', value)}
           placeholder={'City'}
           autoComplete={'country'}
           startIcon={locationIcon}
@@ -130,7 +152,7 @@ const FarmInfo = () => {
           <View style={{flex: 1}}>
             <PrimaryInput
               value={formData.zipcode}
-              onChange={e => onChangeHandler('zipcode', e.target.value)}
+              onChange={value => onChangeHandler('zipcode', value)}
               placeholder={'Enter Zipcode'}
               autoComplete={'postal-code'}
             />
@@ -148,11 +170,7 @@ const FarmInfo = () => {
         <Pressable onPress={() => navigation.goBack()}>
           <Image source={leftArrowIcon} />
         </Pressable>
-        <PrimaryButton
-          label={'Continue'}
-          width={'58%'}
-          action={() => navigation.navigate('verification')}
-        />
+        <PrimaryButton label={'Continue'} width={'58%'} action={onSubmit} />
       </View>
     </View>
   );

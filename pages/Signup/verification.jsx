@@ -1,13 +1,18 @@
 import React, {useState} from 'react';
-import {Text, View, Pressable, Image} from 'react-native';
+import {Text, View, Pressable, Image, Alert} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
+import {useDispatch} from 'react-redux';
 import PrimaryButton from '../../components/primaryButton';
 
 const cameraIcon = require('../../assets/camera-icon.png');
 const removeIcon = require('../../assets/remove-icon.png');
 const leftArrowIcon = require('../../assets/leftArrow-icon.png');
 
+// action
+import {saveData} from '../../slice/auth';
+
 const Verification = () => {
+  const dispatch = useDispatch();
   const navigation = useNavigation();
   const [formData, setFormData] = useState({
     proofOfRegistration: 'usda_registration.pdf',
@@ -15,6 +20,18 @@ const Verification = () => {
 
   const onChangeHandler = (name, value) => {
     setFormData({...formData, [name]: value});
+  };
+
+  const onSubmit = () => {
+    try {
+      const dataModal = {
+        registration_proof: formData.proofOfRegistration,
+      };
+      dispatch(saveData(dataModal));
+      navigation.navigate('hours');
+    } catch (error) {
+      Alert.alert('Internal Error', error.message);
+    }
   };
 
   return (
@@ -125,11 +142,7 @@ const Verification = () => {
         <Pressable onPress={() => navigation.goBack()}>
           <Image source={leftArrowIcon} />
         </Pressable>
-        <PrimaryButton
-          label={'Continue'}
-          width={'58%'}
-          action={() => navigation.navigate('hours')}
-        />
+        <PrimaryButton label={'Continue'} width={'58%'} action={onSubmit} />
       </View>
     </View>
   );

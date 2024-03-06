@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
-import {Text, View, Pressable} from 'react-native';
+import {Text, View, Pressable, Alert} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
+import {useDispatch} from 'react-redux';
 import PrimaryButton from '../../components/primaryButton';
 import AuthProviderBtn from '../../components/authProviderBtn';
 import PrimaryInput from '../../components/primaryInput';
@@ -13,18 +14,47 @@ const emailIcon = require('../../assets/email-icon.png');
 const phoneIcon = require('../../assets/phone-icon.png');
 const passwordIcon = require('../../assets/password-icon.png');
 
+// action
+import {saveData} from '../../slice/auth';
+
 const Signup = () => {
+  const dispatch = useDispatch();
   const navigation = useNavigation();
+  const [hideState, setHideState] = useState({
+    password: true,
+    confirmPassword: true,
+  });
   const [formData, setFormData] = useState({
-    fullName: '',
-    email: '',
-    phoneNumber: '',
-    password: '',
-    confirmPassword: '',
+    fullName: 'Kunal Kamat',
+    email: 'kunalkamat@gmail.com',
+    phoneNumber: '+919403634387',
+    password: '12345678',
+    confirmPassword: '12345678',
   });
 
   const onChangeHandler = (name, value) => {
     setFormData({...formData, [name]: value});
+  };
+
+  const controlHideState = field => {
+    setHideState({...hideState, [field]: !hideState[field]});
+  };
+
+  const onSubmit = ({authProvider, social_id, email, password}) => {
+    try {
+      const dataModal = {
+        full_name: formData.fullName,
+        email: email || formData.email,
+        phone: formData.phoneNumber,
+        password: password || formData.password,
+        type: authProvider,
+        social_id: social_id,
+      };
+      dispatch(saveData(dataModal));
+      navigation.navigate('farmInfo');
+    } catch (error) {
+      Alert.alert('Internal Error', error.message);
+    }
   };
 
   return (
@@ -64,9 +94,39 @@ const Signup = () => {
             flexDirection: 'row',
             justifyContent: 'space-between',
           }}>
-          <AuthProviderBtn icon={googleIcon} action={() => {}} />
-          <AuthProviderBtn icon={appleIcon} action={() => {}} />
-          <AuthProviderBtn icon={facebookIcon} action={() => {}} />
+          <AuthProviderBtn
+            icon={googleIcon}
+            action={() =>
+              onSubmit({
+                email: 'kunalkamat3@gmail.com',
+                password: '12345678',
+                authProvider: 'google',
+                social_id: '0imfnc8mVLWwsAawjYr4Rx-Af50DDqtlx',
+              })
+            }
+          />
+          <AuthProviderBtn
+            icon={appleIcon}
+            action={() =>
+              onSubmit({
+                email: 'kunalkamat3@gmail.com',
+                password: '12345678',
+                authProvider: 'apple',
+                social_id: '0imfnc8mVLWwsAawjYr4Rx-Af50DDqtlx',
+              })
+            }
+          />
+          <AuthProviderBtn
+            icon={facebookIcon}
+            action={() =>
+              onSubmit({
+                email: 'kunalkamat3@gmail.com',
+                password: '12345678',
+                authProvider: 'facebook',
+                social_id: '0imfnc8mVLWwsAawjYr4Rx-Af50DDqtlx',
+              })
+            }
+          />
         </View>
         <Text
           style={{
@@ -81,40 +141,54 @@ const Signup = () => {
         <View style={{marginTop: 32, rowGap: 24}}>
           <PrimaryInput
             value={formData.fullName}
-            onChange={e => onChangeHandler('fullName', e.target.value)}
+            onChange={value => onChangeHandler('fullName', value)}
             placeholder={'Full Name'}
             autoComplete={'name'}
             startIcon={personIcon}
           />
           <PrimaryInput
             value={formData.email}
-            onChange={e => onChangeHandler('email', e.target.value)}
+            onChange={value => onChangeHandler('email', value)}
             placeholder={'Email Address'}
             autoComplete={'email'}
             startIcon={emailIcon}
           />
           <PrimaryInput
             value={formData.phoneNumber}
-            onChange={e => onChangeHandler('phoneNumber', e.target.value)}
+            onChange={value => onChangeHandler('phoneNumber', value)}
             placeholder={'Phone Number'}
             autoComplete={'tel'}
             startIcon={phoneIcon}
           />
           <PrimaryInput
             value={formData.password}
-            onChange={e => onChangeHandler('password', e.target.value)}
+            onChange={value => onChangeHandler('password', value)}
             placeholder={'Password'}
             autoComplete={'password'}
             startIcon={passwordIcon}
-            isSecure={true}
+            isSecure={hideState.password}
+            endAction={
+              <Pressable onPress={() => controlHideState('password')}>
+                <Text style={{fontSize: 14, fontWeight: 400, color: '#D5715B'}}>
+                  {hideState.password ? 'Show' : 'Hide'}
+                </Text>
+              </Pressable>
+            }
           />
           <PrimaryInput
             value={formData.confirmPassword}
-            onChange={e => onChangeHandler('confirmPassword', e.target.value)}
+            onChange={value => onChangeHandler('confirmPassword', value)}
             placeholder={'Re-enter Password'}
             autoComplete={'password'}
             startIcon={passwordIcon}
-            isSecure={true}
+            isSecure={hideState.confirmPassword}
+            endAction={
+              <Pressable onPress={() => controlHideState('confirmPassword')}>
+                <Text style={{fontSize: 14, fontWeight: 400, color: '#D5715B'}}>
+                  {hideState.confirmPassword ? 'Show' : 'Hide'}
+                </Text>
+              </Pressable>
+            }
           />
         </View>
       </View>
@@ -140,7 +214,7 @@ const Signup = () => {
         <PrimaryButton
           label={'Continue'}
           width={'58%'}
-          action={() => navigation.navigate('farmInfo')}
+          action={() => onSubmit({authProvider: 'email', social_id: ''})}
         />
       </View>
     </View>

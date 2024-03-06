@@ -1,9 +1,14 @@
 import React, {useState} from 'react';
-import {Text, View, Pressable, Image} from 'react-native';
+import {Text, View, Pressable, Image, Alert} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
+import {useDispatch, useSelector} from 'react-redux';
 import PrimaryButton from '../../components/primaryButton';
 
 const leftArrowIcon = require('../../assets/leftArrow-icon.png');
+
+// action
+import {register} from '../../thunk/auth';
+import {saveData} from '../../slice/auth';
 
 const days = [
   {initial: 'M', key: 'mon'},
@@ -23,7 +28,7 @@ const daySlots = [
   '7:00pm - 10:00pm',
 ];
 
-const CunditionalRender = ({day, isActive, slots, onPress}) => {
+const ConditionalRender = ({day, isActive, slots, onPress}) => {
   if (isActive) {
     return (
       <Pressable
@@ -100,7 +105,9 @@ const CunditionalRender = ({day, isActive, slots, onPress}) => {
 };
 
 const Hours = () => {
+  const dispatch = useDispatch();
   const navigation = useNavigation();
+  const reduxState = useSelector(state => state.auth);
   const [activeDay, setActiveDay] = useState('mon');
   const [formData, setFormData] = useState({
     mon: [],
@@ -122,6 +129,38 @@ const Hours = () => {
       onChangeHandler(activeDay, updatedSlots);
     } else {
       onChangeHandler(activeDay, [...formData[activeDay], slot]);
+    }
+  };
+
+  const onSignup = async () => {
+    try {
+      const reqModal = {
+        full_name: reduxState.full_name,
+        email: reduxState.email,
+        phone: reduxState.phone,
+        password: reduxState.password,
+        role: 'farmer',
+        business_name: reduxState.business_name,
+        informal_name: reduxState.informal_name,
+        address: reduxState.address,
+        city: reduxState.city,
+        state: reduxState.state,
+        zip_code: reduxState.zip_code,
+        registration_proof: reduxState.registration_proof,
+        business_hours: formData,
+        device_token: '0imfnc8mVLWwsAawjYr4Rx-Af50DDqtlx',
+        type: reduxState.type,
+        social_id: reduxState.social_id,
+      };
+      const response = await dispatch(register(reqModal)).unwrap();
+      if (response.success) {
+        dispatch(saveData(response));
+        navigation.navigate('confirmation');
+      } else {
+        Alert.alert('Signup Failed', response.message);
+      }
+    } catch (error) {
+      Alert.alert('Internal Error', error.message || error.toString());
     }
   };
 
@@ -169,7 +208,7 @@ const Hours = () => {
 
         <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
           {days.map((day, index) => (
-            <CunditionalRender
+            <ConditionalRender
               key={index}
               day={day}
               isActive={day.key === activeDay}
@@ -223,11 +262,7 @@ const Hours = () => {
         <Pressable onPress={() => navigation.goBack()}>
           <Image source={leftArrowIcon} />
         </Pressable>
-        <PrimaryButton
-          label={'Signup'}
-          width={'58%'}
-          action={() => navigation.navigate('confirmation')}
-        />
+        <PrimaryButton label={'Signup'} width={'58%'} action={onSignup} />
       </View>
     </View>
   );

@@ -14,7 +14,7 @@ const PrimaryInput = ({
     <View
       style={{
         height: 48,
-        backgroundColor: '#eeedec',
+        backgroundColor: '#e7e6e4',
         borderRadius: 8,
         paddingHorizontal: 16,
         flexDirection: 'row',

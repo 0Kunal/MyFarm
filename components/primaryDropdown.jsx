@@ -11,14 +11,14 @@ const PrimaryDropdown = ({value, onChange, options, placeholder}) => {
     <DropDownPicker
       placeholder={placeholder}
       style={{
-        backgroundColor: '#eeedec',
-        borderColor: '#eeedec',
+        backgroundColor: '#e7e6e4',
+        borderColor: '#e7e6e4',
         height: 48,
         borderRadius: 8,
       }}
       dropDownContainerStyle={{
         borderWidth: 2,
-        borderColor: '#eeedec',
+        borderColor: '#e7e6e4',
       }}
       ArrowDownIconComponent={() => <Image source={dropdownIcon} />}
       ArrowUpIconComponent={() => (

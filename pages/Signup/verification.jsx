@@ -1,5 +1,13 @@
 import React, {useState} from 'react';
-import {Text, View, Pressable, Image, Alert} from 'react-native';
+import {
+  Text,
+  View,
+  Pressable,
+  Image,
+  Alert,
+  KeyboardAvoidingView,
+  ScrollView,
+} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {useDispatch} from 'react-redux';
 import PrimaryButton from '../../components/primaryButton';
@@ -35,7 +43,7 @@ const Verification = () => {
   };
 
   return (
-    <View style={{flex: 1, padding: 30, justifyContent: 'space-between'}}>
+    <View style={{flex: 1, padding: 30, flexDirection: 'column'}}>
       <View style={{marginTop: 6}}>
         <Text
           style={{
@@ -65,72 +73,80 @@ const Verification = () => {
         </Text>
       </View>
 
-      <View style={{flex: 1, marginTop: 24, rowGap: 40}}>
-        <Text
-          style={{
-            fontSize: 14,
-            fontWeight: 400,
-            color: '#0000004D',
-          }}>
-          Attached proof of Department of Agriculture registrations i.e. Florida
-          Fresh, USDA Approved, USDA Organic
-        </Text>
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-          }}>
-          <Text
-            style={{
-              fontSize: 14,
-              fontWeight: 400,
-              color: '#261C12',
-            }}>
-            Attach proof of registration
-          </Text>
-          <Pressable
-            onPress={() =>
-              setFormData({proofOfRegistration: 'usda_registration.pdf'})
-            }
-            style={{
-              height: 53,
-              width: 53,
-              borderRadius: 50,
-              backgroundColor: '#D5715B',
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}>
-            <Image source={cameraIcon} />
-          </Pressable>
-        </View>
-
-        {formData.proofOfRegistration && (
-          <View
-            style={{
-              height: 48,
-              backgroundColor: '#eeedec',
-              borderRadius: 8,
-              paddingHorizontal: 16,
-              flexDirection: 'row',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-            }}>
+      <KeyboardAvoidingView
+        style={{flex: 1}}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 50}>
+        <ScrollView>
+          <View style={{flex: 1, marginTop: 24, rowGap: 40}}>
             <Text
               style={{
                 fontSize: 14,
                 fontWeight: 400,
-                color: '#261C12',
-                textDecorationLine: 'underline',
+                color: '#0000004D',
               }}>
-              {formData.proofOfRegistration}
+              Attached proof of Department of Agriculture registrations i.e.
+              Florida Fresh, USDA Approved, USDA Organic
             </Text>
-            <Pressable onPress={() => setFormData({proofOfRegistration: ''})}>
-              <Image source={removeIcon} />
-            </Pressable>
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+              }}>
+              <Text
+                style={{
+                  fontSize: 14,
+                  fontWeight: 400,
+                  color: '#261C12',
+                }}>
+                Attach proof of registration
+              </Text>
+              <Pressable
+                onPress={() =>
+                  setFormData({proofOfRegistration: 'usda_registration.pdf'})
+                }
+                style={{
+                  height: 53,
+                  width: 53,
+                  borderRadius: 50,
+                  backgroundColor: '#D5715B',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}>
+                <Image source={cameraIcon} />
+              </Pressable>
+            </View>
+
+            {formData.proofOfRegistration && (
+              <View
+                style={{
+                  height: 48,
+                  backgroundColor: '#e7e6e4',
+                  borderRadius: 8,
+                  paddingHorizontal: 16,
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                }}>
+                <Text
+                  style={{
+                    fontSize: 14,
+                    fontWeight: 400,
+                    color: '#261C12',
+                    textDecorationLine: 'underline',
+                  }}>
+                  {formData.proofOfRegistration}
+                </Text>
+                <Pressable
+                  onPress={() => setFormData({proofOfRegistration: ''})}>
+                  <Image source={removeIcon} />
+                </Pressable>
+              </View>
+            )}
           </View>
-        )}
-      </View>
+        </ScrollView>
+      </KeyboardAvoidingView>
 
       <View
         style={{

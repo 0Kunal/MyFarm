@@ -1,5 +1,13 @@
 import React, {useState} from 'react';
-import {Text, View, Pressable, Image, Alert} from 'react-native';
+import {
+  Text,
+  View,
+  Pressable,
+  Image,
+  Alert,
+  KeyboardAvoidingView,
+  ScrollView,
+} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {useDispatch, useSelector} from 'react-redux';
 import PrimaryButton from '../../components/primaryButton';
@@ -63,7 +71,7 @@ const ConditionalRender = ({day, isActive, slots, onPress}) => {
           borderRadius: 8,
           borderWidth: 1,
           borderColor: '#261C124D',
-          backgroundColor: '#eeedec',
+          backgroundColor: '#e7e6e4',
           justifyContent: 'center',
           alignItems: 'center',
         }}>
@@ -165,7 +173,7 @@ const Hours = () => {
   };
 
   return (
-    <View style={{flex: 1, padding: 30, justifyContent: 'space-between'}}>
+    <View style={{flex: 1, padding: 30, flexDirection: 'column'}}>
       <View style={{marginTop: 6}}>
         <Text
           style={{
@@ -195,62 +203,70 @@ const Hours = () => {
         </Text>
       </View>
 
-      <View style={{flex: 1, marginTop: 24, rowGap: 40}}>
-        <Text
-          style={{
-            fontSize: 14,
-            fontWeight: 400,
-            color: '#0000004D',
-          }}>
-          Choose the hours your farm is open for pickups. This will allow
-          customers to order deliveries.
-        </Text>
-
-        <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-          {days.map((day, index) => (
-            <ConditionalRender
-              key={index}
-              day={day}
-              isActive={day.key === activeDay}
-              slots={formData[day.key].length}
-              onPress={() => setActiveDay(day.key)}
-            />
-          ))}
-        </View>
-
-        <View
-          style={{
-            flexDirection: 'row',
-            flexWrap: 'wrap',
-            justifyContent: 'space-between',
-            rowGap: 12,
-          }}>
-          {daySlots.map((slot, index) => (
-            <Pressable
-              onPress={() => updateSlot(slot)}
-              key={index}
+      <KeyboardAvoidingView
+        style={{flex: 1}}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 50}>
+        <ScrollView>
+          <View style={{flex: 1, marginTop: 24, rowGap: 40}}>
+            <Text
               style={{
-                height: 48,
-                width: '48%',
-                borderRadius: 8,
-                backgroundColor: formData[activeDay].includes(slot)
-                  ? '#F8C569'
-                  : '#eeedec',
-                justifyContent: 'center',
-                alignItems: 'center',
+                fontSize: 14,
+                fontWeight: 400,
+                color: '#0000004D',
               }}>
-              <Text
-                style={{
-                  fontSize: 14,
-                  fontWeight: 500,
-                  color: '#261C12',
-                }}>
-                {slot}
-              </Text>
-            </Pressable>
-          ))}
-        </View>
-      </View>
+              Choose the hours your farm is open for pickups. This will allow
+              customers to order deliveries.
+            </Text>
+
+            <View
+              style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+              {days.map((day, index) => (
+                <ConditionalRender
+                  key={index}
+                  day={day}
+                  isActive={day.key === activeDay}
+                  slots={formData[day.key].length}
+                  onPress={() => setActiveDay(day.key)}
+                />
+              ))}
+            </View>
+
+            <View
+              style={{
+                flexDirection: 'row',
+                flexWrap: 'wrap',
+                justifyContent: 'space-between',
+                rowGap: 12,
+              }}>
+              {daySlots.map((slot, index) => (
+                <Pressable
+                  onPress={() => updateSlot(slot)}
+                  key={index}
+                  style={{
+                    height: 48,
+                    width: '48%',
+                    borderRadius: 8,
+                    backgroundColor: formData[activeDay].includes(slot)
+                      ? '#F8C569'
+                      : '#e7e6e4',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}>
+                  <Text
+                    style={{
+                      fontSize: 14,
+                      fontWeight: 500,
+                      color: '#261C12',
+                    }}>
+                    {slot}
+                  </Text>
+                </Pressable>
+              ))}
+            </View>
+          </View>
+        </ScrollView>
+      </KeyboardAvoidingView>
 
       <View
         style={{

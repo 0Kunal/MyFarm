@@ -1,5 +1,13 @@
 import React, {useState} from 'react';
-import {Text, View, Pressable, Image, Alert} from 'react-native';
+import {
+  Text,
+  View,
+  Pressable,
+  Image,
+  Alert,
+  KeyboardAvoidingView,
+  ScrollView,
+} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {useDispatch} from 'react-redux';
 import PrimaryButton from '../../components/primaryButton';
@@ -80,7 +88,7 @@ const FarmInfo = () => {
   };
 
   return (
-    <View style={{flex: 1, padding: 30, justifyContent: 'space-between'}}>
+    <View style={{flex: 1, padding: 30, flexDirection: 'column'}}>
       <View style={{marginTop: 6}}>
         <Text
           style={{
@@ -110,55 +118,62 @@ const FarmInfo = () => {
         </Text>
       </View>
 
-      <View style={{flex: 1, marginTop: 40, rowGap: 24}}>
-        <PrimaryInput
-          value={formData.businessName}
-          onChange={value => onChangeHandler('businessName', value)}
-          placeholder={'Business Name'}
-          autoComplete={'organization'}
-          startIcon={tagIcon}
-        />
-        <PrimaryInput
-          value={formData.informalName}
-          onChange={value => onChangeHandler('informalName', value)}
-          placeholder={'Informal Name'}
-          autoComplete={'additional-name'}
-          startIcon={smilyIcon}
-        />
-        <PrimaryInput
-          value={formData.streetAddress}
-          onChange={value => onChangeHandler('streetAddress', value)}
-          placeholder={'Street Address'}
-          autoComplete={'street-address'}
-          startIcon={homeIcon}
-        />
-        <PrimaryInput
-          value={formData.city}
-          onChange={value => onChangeHandler('city', value)}
-          placeholder={'City'}
-          autoComplete={'country'}
-          startIcon={locationIcon}
-        />
-        <View style={{flexDirection: 'row', columnGap: 10}}>
-          <View style={{width: '32%'}}>
-            <PrimaryDropdown
-              value={formData.state}
-              onChange={item => onChangeHandler('state', item.value)}
-              options={stateOptions}
-              placeholder={'State'}
-            />
-          </View>
+      <KeyboardAvoidingView
+        style={{flex: 1}}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 50}>
+        {/* <ScrollView> */}
+        <View style={{flex: 1, marginTop: 40, rowGap: 24}}>
+          <PrimaryInput
+            value={formData.businessName}
+            onChange={value => onChangeHandler('businessName', value)}
+            placeholder={'Business Name'}
+            autoComplete={'organization'}
+            startIcon={tagIcon}
+          />
+          <PrimaryInput
+            value={formData.informalName}
+            onChange={value => onChangeHandler('informalName', value)}
+            placeholder={'Informal Name'}
+            autoComplete={'additional-name'}
+            startIcon={smilyIcon}
+          />
+          <PrimaryInput
+            value={formData.streetAddress}
+            onChange={value => onChangeHandler('streetAddress', value)}
+            placeholder={'Street Address'}
+            autoComplete={'street-address'}
+            startIcon={homeIcon}
+          />
+          <PrimaryInput
+            value={formData.city}
+            onChange={value => onChangeHandler('city', value)}
+            placeholder={'City'}
+            autoComplete={'country'}
+            startIcon={locationIcon}
+          />
+          <View style={{flexDirection: 'row', columnGap: 10}}>
+            <View style={{width: '32%'}}>
+              <PrimaryDropdown
+                value={formData.state}
+                onChange={item => onChangeHandler('state', item.value)}
+                options={stateOptions}
+                placeholder={'State'}
+              />
+            </View>
 
-          <View style={{flex: 1}}>
-            <PrimaryInput
-              value={formData.zipcode}
-              onChange={value => onChangeHandler('zipcode', value)}
-              placeholder={'Enter Zipcode'}
-              autoComplete={'postal-code'}
-            />
+            <View style={{flex: 1}}>
+              <PrimaryInput
+                value={formData.zipcode}
+                onChange={value => onChangeHandler('zipcode', value)}
+                placeholder={'Enter Zipcode'}
+                autoComplete={'postal-code'}
+              />
+            </View>
           </View>
         </View>
-      </View>
+        {/* </ScrollView> */}
+      </KeyboardAvoidingView>
 
       <View
         style={{

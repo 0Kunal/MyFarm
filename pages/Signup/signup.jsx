@@ -1,5 +1,12 @@
 import React, {useState} from 'react';
-import {Text, View, Pressable, Alert} from 'react-native';
+import {
+  Text,
+  View,
+  Pressable,
+  Alert,
+  KeyboardAvoidingView,
+  ScrollView,
+} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {useDispatch} from 'react-redux';
 import PrimaryButton from '../../components/primaryButton';
@@ -58,7 +65,7 @@ const Signup = () => {
   };
 
   return (
-    <View style={{flex: 1, padding: 30, justifyContent: 'space-between'}}>
+    <View style={{flex: 1, padding: 30, flexDirection: 'column'}}>
       <View style={{marginTop: 6}}>
         <Text
           style={{
@@ -88,110 +95,120 @@ const Signup = () => {
         </Text>
       </View>
 
-      <View style={{flex: 1, marginTop: 40}}>
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-          }}>
-          <AuthProviderBtn
-            icon={googleIcon}
-            action={() =>
-              onSubmit({
-                email: 'kunalkamat3@gmail.com',
-                password: '12345678',
-                authProvider: 'google',
-                social_id: '0imfnc8mVLWwsAawjYr4Rx-Af50DDqtlx',
-              })
-            }
-          />
-          <AuthProviderBtn
-            icon={appleIcon}
-            action={() =>
-              onSubmit({
-                email: 'kunalkamat3@gmail.com',
-                password: '12345678',
-                authProvider: 'apple',
-                social_id: '0imfnc8mVLWwsAawjYr4Rx-Af50DDqtlx',
-              })
-            }
-          />
-          <AuthProviderBtn
-            icon={facebookIcon}
-            action={() =>
-              onSubmit({
-                email: 'kunalkamat3@gmail.com',
-                password: '12345678',
-                authProvider: 'facebook',
-                social_id: '0imfnc8mVLWwsAawjYr4Rx-Af50DDqtlx',
-              })
-            }
-          />
-        </View>
-        <Text
-          style={{
-            fontSize: 10,
-            fontWeight: 500,
-            color: '#261C124D',
-            textAlign: 'center',
-            marginTop: 32,
-          }}>
-          or signup with
-        </Text>
-        <View style={{marginTop: 32, rowGap: 24}}>
-          <PrimaryInput
-            value={formData.fullName}
-            onChange={value => onChangeHandler('fullName', value)}
-            placeholder={'Full Name'}
-            autoComplete={'name'}
-            startIcon={personIcon}
-          />
-          <PrimaryInput
-            value={formData.email}
-            onChange={value => onChangeHandler('email', value)}
-            placeholder={'Email Address'}
-            autoComplete={'email'}
-            startIcon={emailIcon}
-          />
-          <PrimaryInput
-            value={formData.phoneNumber}
-            onChange={value => onChangeHandler('phoneNumber', value)}
-            placeholder={'Phone Number'}
-            autoComplete={'tel'}
-            startIcon={phoneIcon}
-          />
-          <PrimaryInput
-            value={formData.password}
-            onChange={value => onChangeHandler('password', value)}
-            placeholder={'Password'}
-            autoComplete={'password'}
-            startIcon={passwordIcon}
-            isSecure={hideState.password}
-            endAction={
-              <Pressable onPress={() => controlHideState('password')}>
-                <Text style={{fontSize: 14, fontWeight: 400, color: '#D5715B'}}>
-                  {hideState.password ? 'Show' : 'Hide'}
-                </Text>
-              </Pressable>
-            }
-          />
-          <PrimaryInput
-            value={formData.confirmPassword}
-            onChange={value => onChangeHandler('confirmPassword', value)}
-            placeholder={'Re-enter Password'}
-            autoComplete={'password'}
-            startIcon={passwordIcon}
-            isSecure={hideState.confirmPassword}
-            endAction={
-              <Pressable onPress={() => controlHideState('confirmPassword')}>
-                <Text style={{fontSize: 14, fontWeight: 400, color: '#D5715B'}}>
-                  {hideState.confirmPassword ? 'Show' : 'Hide'}
-                </Text>
-              </Pressable>
-            }
-          />
-        </View>
-      </View>
+      <KeyboardAvoidingView
+        style={{flex: 1}}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 50}>
+        <ScrollView>
+          <View style={{flex: 1, marginTop: 40}}>
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+              }}>
+              <AuthProviderBtn
+                icon={googleIcon}
+                action={() =>
+                  onSubmit({
+                    email: 'kunalkamat3@gmail.com',
+                    password: '12345678',
+                    authProvider: 'google',
+                    social_id: '0imfnc8mVLWwsAawjYr4Rx-Af50DDqtlx',
+                  })
+                }
+              />
+              <AuthProviderBtn
+                icon={appleIcon}
+                action={() =>
+                  onSubmit({
+                    email: 'kunalkamat3@gmail.com',
+                    password: '12345678',
+                    authProvider: 'apple',
+                    social_id: '0imfnc8mVLWwsAawjYr4Rx-Af50DDqtlx',
+                  })
+                }
+              />
+              <AuthProviderBtn
+                icon={facebookIcon}
+                action={() =>
+                  onSubmit({
+                    email: 'kunalkamat3@gmail.com',
+                    password: '12345678',
+                    authProvider: 'facebook',
+                    social_id: '0imfnc8mVLWwsAawjYr4Rx-Af50DDqtlx',
+                  })
+                }
+              />
+            </View>
+            <Text
+              style={{
+                fontSize: 10,
+                fontWeight: 500,
+                color: '#261C124D',
+                textAlign: 'center',
+                marginTop: 32,
+              }}>
+              or signup with
+            </Text>
+            <View style={{marginTop: 32, rowGap: 24}}>
+              <PrimaryInput
+                value={formData.fullName}
+                onChange={value => onChangeHandler('fullName', value)}
+                placeholder={'Full Name'}
+                autoComplete={'name'}
+                startIcon={personIcon}
+              />
+              <PrimaryInput
+                value={formData.email}
+                onChange={value => onChangeHandler('email', value)}
+                placeholder={'Email Address'}
+                autoComplete={'email'}
+                startIcon={emailIcon}
+              />
+              <PrimaryInput
+                value={formData.phoneNumber}
+                onChange={value => onChangeHandler('phoneNumber', value)}
+                placeholder={'Phone Number'}
+                autoComplete={'tel'}
+                startIcon={phoneIcon}
+              />
+              <PrimaryInput
+                value={formData.password}
+                onChange={value => onChangeHandler('password', value)}
+                placeholder={'Password'}
+                autoComplete={'password'}
+                startIcon={passwordIcon}
+                isSecure={hideState.password}
+                endAction={
+                  <Pressable onPress={() => controlHideState('password')}>
+                    <Text
+                      style={{fontSize: 14, fontWeight: 400, color: '#D5715B'}}>
+                      {hideState.password ? 'Show' : 'Hide'}
+                    </Text>
+                  </Pressable>
+                }
+              />
+              <PrimaryInput
+                value={formData.confirmPassword}
+                onChange={value => onChangeHandler('confirmPassword', value)}
+                placeholder={'Re-enter Password'}
+                autoComplete={'password'}
+                startIcon={passwordIcon}
+                isSecure={hideState.confirmPassword}
+                endAction={
+                  <Pressable
+                    onPress={() => controlHideState('confirmPassword')}>
+                    <Text
+                      style={{fontSize: 14, fontWeight: 400, color: '#D5715B'}}>
+                      {hideState.confirmPassword ? 'Show' : 'Hide'}
+                    </Text>
+                  </Pressable>
+                }
+              />
+            </View>
+          </View>
+        </ScrollView>
+      </KeyboardAvoidingView>
 
       <View
         style={{
